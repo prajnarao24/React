@@ -1,0 +1,64 @@
+*{
+  font-family: 'IBM Plex Mono',monospace;
+}
+
+body{
+  background:#0F1115;
+  margin: 0;
+}
+
+h1{
+  color: #eaeac7;
+}
+.terminal{
+  width:360px;
+  margin:60px auto;
+}
+.subtitle{
+  color:#eaeac7;
+  font-size: 18px;
+}
+
+.task-input{
+  background-color: #1a1d23;
+  border: 1px solid #2A2E36;
+  border-radius: 8px;
+  padding: 10px 12px; 
+  color:#ffffff;
+
+}
+
+.add-btn{
+  margin:10px;
+  border-radius: 2px;
+  border: 1px solid #212734;
+  font-weight: 200;
+  cursor: pointer;
+  background: #D9A441;
+  border-radius: 8px;
+  padding: 10px 12px; 
+}
+.task-text{
+  color:white;
+}
+
+.delete-btn{
+  cursor: pointer;
+  color:#6B6F76;
+  margin-left: 10px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  
+}
+
+.task-text {
+  counter-increment: task-counter;
+}
+
+.task-text::before {
+  content: counter(task-counter) ". ";
+  color: #6B6F76;
+}
