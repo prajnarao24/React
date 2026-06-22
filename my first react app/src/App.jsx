@@ -20,7 +20,7 @@ function App(){
   }
 
 
-  function deleteto(id){
+  function deleteTodo(id){
     setTodos(todos.filter((todo)=>todo.id!==id));
     //.filter() keeps every todo except the one whose id matches what you clicked delete on — it builds a new array without that item. This is the same "never mutate, create new" rule from before.
   }
@@ -47,6 +47,10 @@ function App(){
      <button type='submit' className='add-btn'>add</button>
 
 
+
+      </form>
+
+      
 <ul>
   {todos.map((todo)=>(
     <li key={todo.id} className='task-text'>
@@ -62,8 +66,6 @@ function App(){
 </li>
   ))}
 </ul>
-
-      </form>
 
     </div>
   );
