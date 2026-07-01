@@ -1,35 +1,54 @@
-import { useState} from 'react'
+import { useState,useEffect} from 'react'
+
 import './App.css';
 
 function App(){
   const [text,setText]=useState("");
   const [todos,setTodos]=useState([]); 
 
-  function handleSubmit(e){
-    e.preventDefault();
-    if(text.trim()=="") return;
+  useEffect(() => {
+  fetch('http://localhost:3000/todos')
+    .then((res) => res.json())
+    .then((data) => setTodos(data));
+}, []);
 
-    const newTodo={
-      id:Date.now(),
-      text:text,                  //not =
-      completed:false,
-    };
+ function handleSubmit(e) {
+  e.preventDefault();
+  if (text.trim() === "") return;
 
-    setTodos([...todos,newTodo]);
-    setText("");
-  }
+  fetch('http://localhost:3000/todos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: text })
+  })
+    .then((res) => res.json())
+    .then((newTodo) => {
+      setTodos([...todos, newTodo]);
+      setText("");
+    });
+}
 
+function deleteTodo(id) {
+  fetch(`http://localhost:3000/todos/${id}`, {
+    method: 'DELETE'
+  })
+    .then(() => {
+      setTodos(todos.filter((todo) => todo._id !== id));
+    });
+}
 
-  function deleteTodo(id){
-    setTodos(todos.filter((todo)=>todo.id!==id));
-    //.filter() keeps every todo except the one whose id matches what you clicked delete on — it builds a new array without that item. This is the same "never mutate, create new" rule from before.
-  }
-
-  function toggleTodo(id){
-    setTodos(
-      todos.map((todo)=>todo.id===id?{...todo,completed:!todo.completed}:todo)
-    );
-  }
+function toggleTodo(id) {
+  const todo = todos.find((t) => t._id === id);
+  fetch(`http://localhost:3000/todos/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed: !todo.completed })
+  })
+    .then((res) => res.json())
+    .then((updatedTodo) => {
+      setTodos(todos.map((t) => t._id === id ? updatedTodo : t));
+    });
+}
 
 
   const doneCount = todos.filter((todo) => todo.completed).length;
@@ -37,7 +56,7 @@ function App(){
 
     <div className="terminal">
       <h1>MY TO DO LIST</h1>
-      
+
      <p className='subtitle'>{todos.length} tasks, {doneCount} done</p>
 
      <form onSubmit={handleSubmit}>
@@ -53,16 +72,16 @@ function App(){
       
 <ul>
   {todos.map((todo)=>(
-    <li key={todo.id} className='task-text'>
+    <li key={todo._id} className='task-text'>
   <input
     type="checkbox"
     checked={todo.completed}
-    onChange={() => toggleTodo(todo.id)}
+    onChange={() => toggleTodo(todo._id)}
   />
   <span style={{ textDecoration: todo.completed ? "line-through" : "none" }}>
     {todo.text}
   </span>
-  <span onClick={()=>deleteTodo(todo.id)} className='delete-btn'>X</span>
+  <span onClick={()=>deleteTodo(todo._id)} className='delete-btn'>X</span>
 </li>
   ))}
 </ul>
